@@ -1,0 +1,40 @@
+import {create} from "zustand";
+import {immer} from "zustand/middleware/immer";
+import {INITIAL_Z_INDEX,WINDOW_CONFIG} from "../constants/index.js";
+
+
+export const useWindowStore = create(
+    immer((set) => ({
+        windows: WINDOW_CONFIG,
+        nextZIndex: INITIAL_Z_INDEX + 1,
+
+        openWindow:(windowKey , data = null)=>
+            set((state) => {
+                const win = state.windows[windowKey];
+                if(!win) return;
+                win.isOpen = true;
+                win.nextZIndex = state.nextZIndex;
+                win.data = data ?? win.data;
+                state.nextZIndex += 1;
+
+            }),
+            closeWindow:(windowKey)=>
+            set((state) => {
+                const win = state.windows[windowKey];
+                win.isOpen = false;
+                win.nextZIndex = INITIAL_Z_INDEX;
+                win.data = null;
+
+            }),
+
+            focusWindow:(windowKey)=>
+            set((state) => {
+                const win = state.windows[windowKey];
+                win.nextZIndex = INITIAL_Z_INDEX;
+
+            }),
+           
+    })),
+);
+
+export default useWindowStore;
