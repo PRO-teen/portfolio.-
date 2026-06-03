@@ -1,5 +1,6 @@
 import useWindowStore from "#store/window";
 
+
 const WindowControls = ({target}) => {
   const {closeWindow} = useWindowStore();
   return (
